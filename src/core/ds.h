@@ -24,15 +24,15 @@ typedef struct operand_stack {
     struct operand_stack *next;
 } operand_stack;
 
-struct operator_stack init_operator_stack(char operator);
+operator_stack *init_operator_stack(char _operator);
 
-struct operand_stack init_operand_stack(double operand);
+operand_stack *init_operand_stack(double _operand);
 
 size_t get_size_operator_stack(operator_stack *head);
 
-operator_stack *push_operator_stack(operator_stack *head, char data);
+operator_stack *push_operator_stack(operator_stack *head, char _operator);
 
-operand_stack *push_operand_stack(operand_stack *head, double operand);
+operand_stack *push_operand_stack(operand_stack *head, double _operand);
 
 operator_stack *pop_operator_stack(operator_stack *head);
 
