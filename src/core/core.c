@@ -12,6 +12,18 @@ char *rpn(char *in, int *err) {
 
     _catch_err(in, err);
 
+    if (res != NULL) {
+        for (int i = 0; i < in[i]; ++i) {
+            is_unary_minus_or_plus(&in[i], &out, &i);
+            if (in[i] == '(') {
+                operator_s = push_operator_stack(operator_s, in[i]);
+                is_unary_minus_or_plus(&in[i], &out, &i);
+            } else if(in[i] == ')') {
+
+            }
+        }
+    }
+
     return res;
 }
 
@@ -60,7 +72,6 @@ void _catch_err(char *in, int *err) {
     }
     if (count_bracket != 0)
         *err = INVALID;
-
 }
 
 /**
@@ -95,4 +106,25 @@ int is_unary(char *ch) {
     return *ch == 'c' || *ch == 's' || *ch == 't' || *ch == 'a' ||
            *ch == 'g' || *ch == 'q' || *ch == 'l' ||
            *ch == 'C' || *ch == 'S' || *ch == 'T';
+}
+
+/**
+ * @brief - We replacing the unary sign. ['-' -> '~' | '+' -> '#']
+ * @param ch
+ * @param out
+ * @param idx
+ */
+void is_unary_minus_or_plus(char *ch, char **out, int *idx) {
+    char *tmp = *out;
+    int index = *idx;
+
+    if (*ch == '-' && (index == 0 || (index >= 1 && *(ch - 1) == '('))) {
+        *(tmp++) = '~';
+        ++index;
+    } else if (*ch == '+' && (index == 0 || (index >= 1 && *(ch - 1) == '('))) {
+        *(tmp++) = '#';
+        ++index;
+    }
+    *out = tmp;
+    *idx = index;
 }
