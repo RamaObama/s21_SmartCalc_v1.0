@@ -18,11 +18,28 @@ char *rpn(char *in, int *err) {
             if (in[i] == '(') {
                 operator_s = push_operator_stack(operator_s, in[i]);
                 is_unary_minus_or_plus(&in[i], &out, &i);
-            } else if(in[i] == ')') {
-
+            } else if (in[i] == ')') {
+                while (operator_s != NULL && peek_operator_stack(operator_s) != '(') {
+                    *(out++) = peek_operator_stack(operator_s);
+                    *(out++) = ' ';
+                    operator_s = pop_operator_stack(operator_s);
+                }
+                operator_s = pop_operator_stack(operator_s);
+            } else if (is_digit(&in[i]) || in[i] == '.' || in[i] == 'x') {
+                *(out++) = in[i];
+                if (!(is_digit(&in[i + 1]) || in[i + 1] == '.'))
+                    *(out++) = ' ';
+            } else if (is_binary(&in[i])) {
+                // TODO: Parser for binary operations;
+            } else if (is_unary(in[i])) {
+                // TODO: Parser for unary operations;
             }
         }
+    } else {
+        *err = MEM;
     }
+
+    // TODO:
 
     return res;
 }
@@ -127,4 +144,27 @@ void is_unary_minus_or_plus(char *ch, char **out, int *idx) {
     }
     *out = tmp;
     *idx = index;
+}
+
+
+/**
+ * @brief - Let's determine the priority of the operation.
+ * @param _operation
+ * @return - We return the priority number of the operation to be replenished.
+ */
+int get_operation_priority(char _operation) {
+    int ret = 0;
+
+    if (_operation == '+' || _operation == '-')
+        ret = 1;
+    else if (_operation == '*' || _operation == '/' || _operation == '%')
+        ret = 2;
+    else if (_operation == '^')
+        ret = 3;
+    else if (_operation == 'c' || _operation == 'C' || _operation == 't' ||
+             _operation == 'T' || _operation == 's' || _operation == 'S' ||
+             _operation == 'q' || _operation == 'l' || _operation == 'g')
+        ret = 4;
+
+    return ret;
 }
