@@ -31,6 +31,8 @@ int is_digit(char *ch);
 
 int is_unary(char *ch);
 
+void is_unary_minus_or_plus(char *ch, char **out, int *idx);
+
 
 int get_operation_priority(char _operation);
 
